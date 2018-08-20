@@ -1,1 +1,1 @@
-from model import TemporalConvNet
+from .model import TemporalConvNet
