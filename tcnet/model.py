@@ -1,5 +1,7 @@
+import numpy as np
 from keras.models import Model
 from keras.layers import Conv1D, BatchNormalization, Dropout, SpatialDropout1D, LeakyReLU, Input, Dense
+from tcnet.metrics import rmse
 
 
 class TemporalConvNet:
@@ -8,7 +10,7 @@ class TemporalConvNet:
         self._seq_n = 1
         self._blocks = blocks
         self._model = self._build(self._blocks)
-        self._model.compile(optimizer='adam', loss='mse', metrics=['mse'])
+        self._model.compile(optimizer='adam', loss='mse', metrics=[rmse])
 
     def _residual_block(self, input_tensor, factor):
         dilation = 2 ** factor
@@ -56,5 +58,14 @@ class TemporalConvNet:
     def train_batch(self, x, y):
         return self._model.train_on_batch(x, y)
 
-    def predict(self):
-        pass
+    def predict(self, data, n_ahead):
+        predicted = []
+
+        for _ in range(n_ahead):
+            pred = self._model.predict(data)
+            new = pred[:, -1, :]
+            predicted.append(new)
+            data = np.append(data, new).reshape(1, -1, 1)
+            data = data[:, 1:, :]
+
+        return np.array(predicted).flatten()
