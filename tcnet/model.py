@@ -1,6 +1,7 @@
 import numpy as np
-from keras.models import Model
-from keras.layers import Conv1D, BatchNormalization, Dropout, SpatialDropout1D, LeakyReLU, Input, Dense
+from keras.models import Model, Sequential
+from keras.layers import Conv1D, BatchNormalization, Dropout, SpatialDropout1D, LeakyReLU, Input, Dense, add
+from keras.optimizers import Adam
 from tcnet.metrics import rmse
 
 
@@ -8,15 +9,16 @@ class TemporalConvNet:
     def __init__(self, seq_length, blocks=9):
         self._seq_length = seq_length
         self._seq_n = 1
-        self._blocks = blocks
-        self._model = self._build(self._blocks)
-        self._model.compile(optimizer='adam', loss='mse', metrics=[rmse])
+        self.optimizer = Adam(lr=0.001)
+        self._model = self._build(blocks)
+        self._model.compile(optimizer=self.optimizer, loss='mse', metrics=[rmse])
 
-    def _residual_block(self, input_tensor, factor):
+    def _residual_block(self, factor):
         dilation = 2 ** factor
+        inputs = Input(shape=(self._seq_length, self._seq_n))
 
         # Residual block
-        c1 = Conv1D(self._seq_length, kernel_size=3, strides=1, padding='causal', dilation_rate=dilation)(input_tensor)
+        c1 = Conv1D(self._seq_length, kernel_size=3, strides=1, padding='causal', dilation_rate=dilation)(inputs)
         n1 = BatchNormalization(momentum=0.8)(c1)
         a1 = LeakyReLU(alpha=0.2)(n1)
         d1 = SpatialDropout1D(rate=0.2)(a1)
@@ -24,22 +26,23 @@ class TemporalConvNet:
         n2 = BatchNormalization(momentum=0.8)(c2)
         a2 = LeakyReLU(alpha=0.2)(n2)
         d2 = SpatialDropout1D(rate=0.2)(a2)
-        # TODO add skip connections
 
-        return d2
+        # Residual connection
+        residual = Conv1D(self._seq_n, kernel_size=1, padding='same')(d2)
+        outputs = add([inputs, residual])
 
-    def _build(self, blocks):
-        input_layer = Input(shape=(self._seq_length, self._seq_n))
-        initial = input_layer
+        return Model(inputs=inputs, outputs=outputs, name='residual_block_dilation_{}'.format(dilation))
 
-        for block in range(blocks):
-            initial = self._residual_block(initial, block)
+    def _build(self, dilations):
+        model = Sequential()
 
-        dense = Dense(self._seq_length, activation='relu')(initial)
-        drop = Dropout(rate=0.2)(dense)
-        output = Dense(1, activation='linear')(drop)
+        for dilation in range(dilations):
+            block = self._residual_block(dilation)
+            model.add(block)
 
-        return Model(inputs=input_layer, outputs=output)
+        model.add(Dense(1, activation='linear'))
+
+        return model
 
     def print_summary(self):
         # debug only
