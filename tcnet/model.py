@@ -1,7 +1,8 @@
 import numpy as np
 from keras.models import Model, Sequential
-from keras.layers import Conv1D, BatchNormalization, Dropout, SpatialDropout1D, LeakyReLU, Input, Dense, add
+from keras.layers import Conv1D, BatchNormalization, SpatialDropout1D, LeakyReLU, Input, Dense, add, Activation
 from keras.optimizers import Adam
+from tcnet.activations import gated_activation
 from tcnet.metrics import rmse
 
 
@@ -18,13 +19,13 @@ class TemporalConvNet:
         inputs = Input(shape=(self._seq_length, self._seq_n))
 
         # Residual block
-        c1 = Conv1D(self._seq_length, kernel_size=3, strides=1, padding='causal', dilation_rate=dilation)(inputs)
+        c1 = Conv1D(64, kernel_size=3, strides=1, padding='causal', dilation_rate=dilation)(inputs)
         n1 = BatchNormalization(momentum=0.8)(c1)
-        a1 = LeakyReLU(alpha=0.2)(n1)
+        a1 = Activation(gated_activation)(n1)
         d1 = SpatialDropout1D(rate=0.2)(a1)
-        c2 = Conv1D(self._seq_length, kernel_size=3, strides=1, padding='causal', dilation_rate=dilation)(d1)
+        c2 = Conv1D(64, kernel_size=3, strides=1, padding='causal', dilation_rate=dilation)(d1)
         n2 = BatchNormalization(momentum=0.8)(c2)
-        a2 = LeakyReLU(alpha=0.2)(n2)
+        a2 = Activation(gated_activation)(n2)
         d2 = SpatialDropout1D(rate=0.2)(a2)
 
         # Residual connection
@@ -40,7 +41,7 @@ class TemporalConvNet:
             block = self._residual_block(dilation)
             model.add(block)
 
-        model.add(Dense(1, activation='linear'))
+        # model.add(Dense(1, activation='linear'))
 
         return model
 
@@ -54,7 +55,7 @@ class TemporalConvNet:
             y=train_y,
             batch_size=self._seq_length,
             epochs=epochs,
-            verbose=verbose,
+            verbose=verbose
             validation_data=(val_x, val_y)
         )
 
