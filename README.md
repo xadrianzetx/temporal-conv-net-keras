@@ -2,9 +2,8 @@
 TCN architecture for time series
 
 ## Evaluation
-### Methodology
 
-Evaluation of tcn was done with respect to following points:
+Temporal conv network was evaluated with respect to following points:
 - Split selected dataset into training, evaluation and testing subsets
 - Test set has lenght of `seq_length + n_ahead` where `seq_length` is length of sequence fed to TCN, and `n_ahead` is prediction length
 - Train network using training and evaluation sets
@@ -25,6 +24,12 @@ Evaluation of tcn was done with respect to following points:
 <p align="center">
   <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/montreal_weather_model.png">
   </p>
+
+### Evaluation set 2 - Work in progress ...
+
+## TODO
+- evaluate some more
+- compare TCN to other models (LSTM, Holt Winters)
 
 ## References
 - [Bai et al., 2018, 
