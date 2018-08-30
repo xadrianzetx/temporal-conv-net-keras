@@ -3,7 +3,7 @@ TCN architecture for time series
 
 ## Evaluation
 
-Temporal conv network was evaluated with respect to following points:
+Temporal convolutional network was evaluated with respect to following points:
 - Split selected dataset into training, evaluation and testing subsets
 - Test set has lenght of `seq_length + n_ahead` where `seq_length` is length of sequence fed to TCN, and `n_ahead` is prediction length
 - Train network using training and evaluation sets
