@@ -11,6 +11,21 @@ Evaluation of tcn was done with respect to following points:
 - Feed `seq_lenght` of test set into trained network and get `n_ahead` predictions
 - Evaluate `n_ahead` predictions against `n_ahead` from test set
 
+### Evaluation set 1 - Historical Hourly Weather Data
+[Source](https://www.kaggle.com/selfishgene/historical-hourly-weather-data)
+
+<p align="center">
+  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/unnamed-chunk-3-1.png">
+  </p>
+
+<p align="center">
+  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/unnamed-chunk-5-1.png">
+  </p>
+  
+<p align="center">
+  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/montreal_weather_model.png">
+  </p>
+
 ## References
 - [Bai et al., 2018, 
 An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling](https://arxiv.org/pdf/1803.01271.pdf)
