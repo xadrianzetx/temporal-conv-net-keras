@@ -14,7 +14,7 @@ Temporal convolutional network was evaluated with respect to following points:
 [Source](https://www.kaggle.com/selfishgene/historical-hourly-weather-data)
 
 <p align="center">
-  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/unnamed-chunk-3-1.png">
+  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/loss.png">
   </p>
 
 <p align="center">
