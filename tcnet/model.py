@@ -10,9 +10,9 @@ from tcnet.metrics import rmse
 class TemporalConvNet:
     def __init__(self, seq_length, blocks=6):
         self._seq_length = seq_length
-        self.optimizer = Adam(lr=0.001)
+        self._optimizer = Adam(lr=0.001)
         self._model = self._build(blocks)
-        self._model.compile(optimizer=self.optimizer, loss='mse', metrics=[rmse])
+        self._model.compile(optimizer=self._optimizer, loss='mse', metrics=[rmse])
 
     def _residual_block(self, factor):
         dilation = 2 ** factor
