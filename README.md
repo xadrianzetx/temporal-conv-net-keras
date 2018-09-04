@@ -29,7 +29,7 @@ Temporal convolutional network was evaluated with respect to following points:
 [Source](https://www.kaggle.com/decide-soluciones/air-quality-madrid/home)
 
 <p align="center">
-  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/unnamed-chunk-7-1.png">
+  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/loss2.png">
   </p>
 
 <p align="center">
