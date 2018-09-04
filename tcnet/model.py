@@ -8,8 +8,9 @@ from tcnet.metrics import rmse
 
 
 class TemporalConvNet:
-    def __init__(self, seq_length, blocks=6):
+    def __init__(self, seq_length, blocks=6, filters=64):
         self._seq_length = seq_length
+        self._n_filters = filters
         self._optimizer = Adam(lr=0.001)
         self._model = self._build(blocks)
         self._model.compile(optimizer=self._optimizer, loss='mse', metrics=[rmse])
@@ -19,11 +20,11 @@ class TemporalConvNet:
         inputs = Input(shape=(self._seq_length, 1))
 
         # Residual block
-        c1 = Conv1D(64, kernel_size=4, strides=1, padding='causal', dilation_rate=dilation)(inputs)
+        c1 = Conv1D(self._n_filters, kernel_size=4, strides=1, padding='causal', dilation_rate=dilation)(inputs)
         n1 = BatchNormalization(momentum=0.6)(c1)
         a1 = Activation(gated_activation)(n1)
         d1 = SpatialDropout1D(rate=0.2)(a1)
-        c2 = Conv1D(64, kernel_size=4, strides=1, padding='causal', dilation_rate=dilation)(d1)
+        c2 = Conv1D(self._n_filters, kernel_size=4, strides=1, padding='causal', dilation_rate=dilation)(d1)
         n2 = BatchNormalization(momentum=0.6)(c2)
         a2 = Activation(gated_activation)(n2)
         d2 = SpatialDropout1D(rate=0.2)(a2)
@@ -73,4 +74,3 @@ class TemporalConvNet:
         with CustomObjectScope({'gated_activation': gated_activation, 'rmse': rmse}):
             self._model = load_model(path)
             print('Model restored')
-
