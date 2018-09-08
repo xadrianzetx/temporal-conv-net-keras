@@ -40,10 +40,18 @@ Temporal convolutional network was evaluated with respect to following points:
   <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/montreal_weather_model.png">
   </p>
   
-### Evaluation set 3 - Work in progress ...
+### Evaluation set 3 - Hourly Energy Consumption
+[Source](https://www.kaggle.com/robikscube/hourly-energy-consumption/home)
+
+<p align="center">
+  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/unnamed-chunk-11-1.png">
+  </p>
+
+<p align="center">
+  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/unnamed-chunk-13-1.png">
+  </p>
 
 ## TODO
-- evaluate some more
 - compare TCN to other models (LSTM, Holt Winters)
 
 ## References
