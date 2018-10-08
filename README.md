@@ -51,6 +51,10 @@ Temporal convolutional network was evaluated with respect to following points:
   <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/unnamed-chunk-13-1.png">
   </p>
 
+<p align="center">
+  <img src="https://github.com/xadrianzetx/timeseries/blob/master/plots/tcn_training.gif">
+  </p>
+  
 ## TODO
 - compare TCN to other models (LSTM, Holt Winters)
 
